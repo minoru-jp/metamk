@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metamk"
+version = "0.0.2"
+description = "A minimal framework for explicit phase structuring around the main action (inspired by AAA pattern and Design by Contract)"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "minoru_jp" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = [
+    "AAA",
+    "test",
+    "mark",
+    "divide",
+    "separate",
+    "structuring",
+    "dbc",
+    "contract",
+    "async",
+    "framework",
+]
+
+[project.urls]
+Homepage = "https://github.com/minoru-jp/metamk"
+Source = "https://github.com/minoru-jp/metamk"
+Issues = "https://github.com/minoru-jp/metamk/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["metamk*"]

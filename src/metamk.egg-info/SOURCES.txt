@@ -1,0 +1,9 @@
+LICENSE
+README.md
+pyproject.toml
+src/metamk/__init__.py
+src/metamk/metamk.py
+src/metamk.egg-info/PKG-INFO
+src/metamk.egg-info/SOURCES.txt
+src/metamk.egg-info/dependency_links.txt
+src/metamk.egg-info/top_level.txt

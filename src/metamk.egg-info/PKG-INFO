@@ -1,0 +1,131 @@
+Metadata-Version: 2.4
+Name: metamk
+Version: 0.0.2
+Summary: A minimal framework for explicit phase structuring around the main action (inspired by AAA pattern and Design by Contract)
+Author: minoru_jp
+License: MIT License
+        
+        Copyright (c) 2025 minoru_jp
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in
+        all copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+        THE SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/minoru-jp/metamk
+Project-URL: Source, https://github.com/minoru-jp/metamk
+Project-URL: Issues, https://github.com/minoru-jp/metamk/issues
+Keywords: AAA,test,mark,divide,separate,structuring,dbc,contract,async,framework
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# metamk
+
+**A minimal framework for defining phase structure around a main action.**
+
+Inspired by Arrange–Act–Assert testing pattern and Design by Contract,  
+metamk structures execution into clear, explicit phases without adding control logic.
+
+It separates the main processing phase from setup, checks, and cleanup,  
+and provides both synchronous and asynchronous APIs.
+
+```python
+from metamk import Mark
+
+mark = Mark()
+
+async with mark.a.as_block():
+    mark.a.setup(async_setup())
+    mark.a.before(async_check())
+
+    result = mark.MAIN(await async_action())
+    
+    mark.a.after(async_validate())
+    mark.a.final(async_cleanup())
+````
+
+The main action (`MAIN`) always belongs to `Mark`,
+while async phase methods are available under `Mark.a`.
+
+Synchronous use is also supported:
+
+```python
+with mark.as_block():
+    mark.setup(lambda: print("setup"))
+    mark.before(lambda: True)
+
+    result = mark.MAIN("main action")
+    
+    mark.after(lambda: True)
+    mark.final(lambda: print("done"))
+```
+
+When you want to group multiple operations within the same phase,  
+you can use the corresponding `as_*_block()` context instead of a single method call.
+
+```python
+async with mark.a.as_block():
+    async with mark.a.as_setup_block():
+        await obj.setup()
+
+    async with mark.a.as_before_block():
+        await obj.pre_check()
+
+    async with mark.a.as_MAIN_block():
+        result = await obj.main_action()
+        print(f"MAIN result: {result}")
+
+    async with mark.a.as_after_block():
+        await obj.validate()
+
+    async with mark.a.as_final_block():
+        await obj.cleanup()
+```
+
+---
+
+## Phase Management
+
+This module provides a safe and flexible mechanism for managing the execution state (phase) of a process.  
+Phases generally progress in the following order:
+
+```
+INIT → SETUP → BEFORE → MAIN → CLEANUP → AFTER → FINAL → TERMINATED
+```
+
+However, **strict sequential progression is not enforced**.  
+While phases are expected to move “forward” in order,  
+it is allowed to call the same phase method or block multiple times in succession,  
+or to skip intermediate phases — for example, jumping directly to `FINAL` if necessary.
+
+Additionally, the `CLEANUP` and `AFTER` phases require that the `MAIN` phase has already been executed.  
+If this condition is not met, or if the phase order is reversed, a `PhaseError` will be raised.
+
+The `INVARIANT` phase is a flexible phase that can be invoked after **any phase**,  
+as long as the process has not reached the `TERMINATED` state.
+
+Furthermore, by using `Mark.invoke`, you can perform a simple, standalone call  
+that is completely independent of the phase system.
+
+
+
