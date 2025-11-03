@@ -86,5 +86,28 @@ as long as the process has not reached the `TERMINATED` state.
 Furthermore, by using `Mark.invoke`, you can perform a simple, standalone call  
 that is completely independent of the phase system.
 
+Installation
 
+pip
+```bash
+pip install metamk
+```
+
+github
+```bash
+pip install git+https://github.com/minoru-jp/metamk.git
+```
+
+---
+
+## Status
+
+This project is in **very early development (alpha stage)**.  
+APIs and behavior may change without notice.
+
+---
+
+## License
+
+MIT License © 2025 minoru_jp
 
