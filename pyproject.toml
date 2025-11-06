@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "metamk"
-version = "0.0.2"
+version = "0.0.3"
 description = "A minimal framework for explicit phase structuring around the main action (inspired by AAA pattern and Design by Contract)"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
