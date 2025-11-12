@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager, contextmanager
 from dataclasses import dataclass, field
 from enum import Enum
 import threading
-from typing import Any, AsyncGenerator, Awaitable, Callable, Iterator, TypeVar
+from typing import Any, AsyncGenerator, Awaitable, Callable, Generator, Iterator, TypeVar
 
 T = TypeVar("T")
 
@@ -187,37 +187,37 @@ class Mark:
                 raise RuntimeError("This test block ended without calling ACT.")
     
     @contextmanager
-    def as_invariant_block(self) -> Iterator[None]:
+    def as_invariant_block(self) -> Generator[None]:
         with self._ordering_block_process(_OrderingMethod.INVARIANT, None):
             yield
 
     @contextmanager
-    def as_setup_block(self) -> Iterator[None]:
+    def as_setup_block(self) -> Generator[None]:
         with self._ordering_block_process(_OrderingMethod.SETUP, None):
             yield
 
     @contextmanager
-    def as_before_block(self) -> Iterator[None]:
+    def as_before_block(self) -> Generator[None]:
         with self._ordering_block_process(_OrderingMethod.BEFORE, None):
             yield
 
     @contextmanager
-    def as_MAIN_block(self) -> Iterator[None]:
+    def as_MAIN_block(self) -> Generator[None]:
         with self._ordering_block_process(_OrderingMethod.ACT, None):
             yield
     
     @contextmanager
-    def as_cleanup_block(self) -> Iterator[None]:
+    def as_cleanup_block(self) -> Generator[None]:
         with self._ordering_block_process(_OrderingMethod.CLEANUP, None):
             yield
     
     @contextmanager
-    def as_after_block(self) -> Iterator[None]:
+    def as_after_block(self) -> Generator[None]:
         with self._ordering_block_process(_OrderingMethod.AFTER, None):
             yield
 
     @contextmanager
-    def as_final_block(self) -> Iterator[None]:
+    def as_final_block(self) -> Generator[None]:
         with self._ordering_block_process(_OrderingMethod.FINAL, None):
             yield
 
@@ -511,37 +511,37 @@ class Mk:
 
     @classmethod
     @contextmanager
-    def as_invariant_block(cls):
+    def as_invariant_block(cls) -> Generator[None]:
         yield
 
     @classmethod
     @contextmanager
-    def as_setup_block(cls):
+    def as_setup_block(cls) -> Generator[None]:
         yield
 
     @classmethod
     @contextmanager
-    def as_before_block(cls):
+    def as_before_block(cls) -> Generator[None]:
         yield
 
     @classmethod
     @contextmanager
-    def as_MAIN_block(cls):
+    def as_MAIN_block(cls) -> Generator[None]:
         yield
     
     @classmethod
     @contextmanager
-    def as_cleanup_block(cls):
+    def as_cleanup_block(cls) -> Generator[None]:
         yield
     
     @classmethod
     @contextmanager
-    def as_after_block(cls):
+    def as_after_block(cls) -> Generator[None]:
         yield
 
     @classmethod
     @contextmanager
-    def as_final_block(cls):
+    def as_final_block(cls) -> Generator[None]:
         yield
 
 
