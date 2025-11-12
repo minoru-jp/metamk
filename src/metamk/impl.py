@@ -401,3 +401,147 @@ class _AsyncMark:
         else:
             self._parent.on_negative(p, awaitable, r)
 
+
+class _AsyncMk:
+
+    @classmethod
+    async def invariant(cls, awaitable: Awaitable[bool]) -> None:
+        Mk._evaluate_fn(await awaitable)
+    
+    @classmethod
+    async def setup(cls, awaitable: Awaitable[T]) -> T:
+        return await awaitable
+
+    @classmethod
+    async def before(cls, awaitable: Awaitable[bool]) -> None:
+        Mk._evaluate_fn(await awaitable)
+    
+    @classmethod
+    async def cleanup(cls, awaitable: Awaitable[T]) -> T:
+        return await awaitable
+
+    @classmethod
+    async def after(cls, awaitable: Awaitable[bool]) -> None:
+        Mk._evaluate_fn(await awaitable)
+    
+    @classmethod
+    async def final(cls, awaitable: Awaitable[T]) -> T:
+        return await awaitable
+    
+    @classmethod
+    async def invoke(cls, awaitable: Awaitable[T]) -> T:
+        return await awaitable
+
+    @classmethod
+    @asynccontextmanager
+    async def as_invariant_block(cls) -> AsyncGenerator[None, None]:
+        yield
+
+    @classmethod
+    @asynccontextmanager
+    async def as_setup_block(cls) -> AsyncGenerator[None, None]:
+        yield
+
+    @classmethod
+    @asynccontextmanager
+    async def as_before_block(cls) -> AsyncGenerator[None, None]:
+        yield
+
+    @classmethod
+    @asynccontextmanager
+    async def as_MAIN_block(cls) -> AsyncGenerator[None, None]:
+        yield
+    
+    @classmethod
+    @asynccontextmanager
+    async def as_cleanup_block(cls) -> AsyncGenerator[None, None]:
+        yield
+    
+    @classmethod
+    @asynccontextmanager
+    async def as_after_block(cls) -> AsyncGenerator[None, None]:
+        yield
+
+    @classmethod
+    @asynccontextmanager
+    async def as_final_block(cls) -> AsyncGenerator[None, None]:
+        yield
+
+
+class Mk:
+    a = _AsyncMk
+
+    @classmethod
+    def _evaluate_fn(cls, result) -> None:
+        if not result:
+            raise RuntimeError("evaluation failed.")
+
+    @classmethod
+    def invariant(cls, fn: Callable[[], bool]) -> None:
+        cls._evaluate_fn(fn())
+        
+    @classmethod
+    def setup(cls, fn: Callable[[], T]) -> T:
+        return fn()
+
+    @classmethod
+    def before(cls, fn: Callable[[], bool]) -> None:
+        cls._evaluate_fn(fn())
+
+    @classmethod
+    def MAIN(cls, v: T) -> T:
+        return v
+    
+    @classmethod
+    def cleanup(cls, fn: Callable[[], T]) -> T:
+        return fn()
+
+    @classmethod
+    def after(cls, fn: Callable[[], bool]) -> None:
+        cls._evaluate_fn(fn())
+    
+    @classmethod
+    def final(cls, fn: Callable[[], T]) -> T:
+        return fn()
+    
+    @classmethod
+    def invoke(cls, fn: Callable[[], T]) -> T:
+        return fn()
+    
+
+    @classmethod
+    @contextmanager
+    def as_invariant_block(cls):
+        yield
+
+    @classmethod
+    @contextmanager
+    def as_setup_block(cls):
+        yield
+
+    @classmethod
+    @contextmanager
+    def as_before_block(cls):
+        yield
+
+    @classmethod
+    @contextmanager
+    def as_MAIN_block(cls):
+        yield
+    
+    @classmethod
+    @contextmanager
+    def as_cleanup_block(cls):
+        yield
+    
+    @classmethod
+    @contextmanager
+    def as_after_block(cls):
+        yield
+
+    @classmethod
+    @contextmanager
+    def as_final_block(cls):
+        yield
+
+
