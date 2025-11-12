@@ -3,6 +3,6 @@
 metamk structures execution into clear, explicit phases without adding control logic.
 """
 
-from metamk.impl import Mark, Phase, PhaseError
+from metamk.impl import Mk, Mark, Phase, PhaseError
 
-__all__ = ["Mark", "Phase", "PhaseError"]
+__all__ = ["Mk", "Mark", "Phase", "PhaseError"]
