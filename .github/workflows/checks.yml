@@ -1,0 +1,73 @@
+name: Reusable checks
+
+# Quality gates shared by CI and the release workflow, so that a release can
+# never be published from a revision that normal CI would have rejected.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Ruff and typing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install quality dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[lint,typecheck]"
+
+      - name: Check Ruff formatting
+        run: ruff format --check .
+
+      - name: Run Ruff lint
+        run: ruff check .
+
+      - name: Run BasedPyright
+        run: basedpyright
+
+      - name: Check consumer typing contract
+        run: basedpyright -p tests/typing
+
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # `docs` and `typecheck` are needed because the test suite also checks that
+      # the canonical documents are in sync with their sources and that the
+      # consumer typing contract holds. On CI a missing tool fails the test
+      # instead of skipping it (see tests/conftest.py).
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test,docs,typecheck]"
+
+      - name: Run tests
+        run: python -m pytest

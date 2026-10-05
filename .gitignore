@@ -54,3 +54,6 @@ target/
 .ipynb_checkpoints
 # mypy
 .mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.basedpyright/

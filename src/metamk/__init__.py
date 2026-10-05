@@ -1,8 +1,11 @@
-"""metamk - A minimal framework for defining phase structure around a main action.
+"""metamk - divide test code into PREPARE / MAIN / VERIFY phases.
 
-metamk structures execution into clear, explicit phases without adding control logic.
+An exception that passes through a phase block gets the phase name recorded on
+it, so a failure shows *which phase* it happened in. At runtime the blocks do
+nothing else: they never change control flow and never swallow or replace
+exceptions.
 """
 
-from metamk.impl import Mk, Mark, Phase, PhaseError
+from metamk._core import Mk, phase_of
 
-__all__ = ["Mk", "Mark", "Phase", "PhaseError"]
+__all__ = ["Mk", "phase_of"]

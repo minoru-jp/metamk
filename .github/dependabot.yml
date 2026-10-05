@@ -1,0 +1,11 @@
+# Keeps the commit-SHA pins of the GitHub Actions used by the workflows current.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Wait a few days before proposing a newly published version, so that a
+    # compromised release is more likely to be caught or yanked first.
+    cooldown:
+      default-days: 7

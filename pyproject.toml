@@ -1,45 +1,70 @@
 [build-system]
-requires = ["setuptools>=70", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
 
 [project]
 name = "metamk"
-version = "0.0.4"
-description = "A minimal framework for explicit phase structuring around the main action (inspired by AAA pattern and Design by Contract)"
-readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.10"
-license = { file = "LICENSE" }
-authors = [
-    { name = "minoru_jp" }
+version = "0.1.0"
+description = "A tiny library that divides test code into PREPARE / MAIN / VERIFY phases and records the failed phase on the exception."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "minoru_jp" }]
+dependencies = []
+
+keywords = [
+  "test",
+  "testing",
+  "pytest",
+  "traceback",
+  "exception",
+  "phase",
+  "structuring",
 ]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Topic :: Software Development :: Libraries :: Python Modules",
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Software Development :: Testing",
+  "Typing :: Typed",
 ]
-keywords = [
-    "AAA",
-    "test",
-    "mark",
-    "divide",
-    "separate",
-    "structuring",
-    "dbc",
-    "contract",
-    "async",
-    "framework",
-]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+lint = ["ruff==0.16.10"]
+typecheck = ["basedpyright==1.40.2"]
+docs = ["shikumi-devdoc>=0.3.5"]
+dist = ["build>=1.2", "twine>=6.1"]
 
 [project.urls]
-Homepage = "https://github.com/minoru-jp/metamk"
-Source = "https://github.com/minoru-jp/metamk"
+Repository = "https://github.com/minoru-jp/metamk"
+Changelog = "https://github.com/minoru-jp/metamk/blob/main/CHANGELOG.md"
 Issues = "https://github.com/minoru-jp/metamk/issues"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+pythonpath = ["src"]
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["metamk*"]
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+# Ruff is version-pinned; keep that version's stable default rule set as the
+# baseline rather than silently opting into preview diagnostics.
+preview = false
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/metamk"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/.github"]
+
+[tool.basedpyright]
+include = ["src/metamk"]
+pythonVersion = "3.11"
